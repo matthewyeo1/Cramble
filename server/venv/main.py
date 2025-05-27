@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, StreamingResponse
 from io import BytesIO
@@ -12,15 +12,6 @@ import re
 from tuning import load_model_and_tokenizer, apply_lora, train_lora, load_lora_model, generate_text
 from datasets import load_dataset
 
-
-# Load base model and tokenizer
-model, tokenizer = load_model_and_tokenizer()
-
-# Load the base EleutherAI GPT-Neo model
-lora_model = load_lora_model("EleutherAI/gpt-neo-1.3B", "lora_output")
-
-##
-
 app = FastAPI()
 
 app.add_middleware(
@@ -29,6 +20,18 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+@app.on_event("startup")
+async def load_models_once():
+    print("[STARTUP] Loading model and tokenizer...")
+    model, tokenizer = load_model_and_tokenizer()
+    lora_model = load_lora_model("EleutherAI/gpt-neo-125m", "lora_output")
+
+    # Save into app state
+    app.state.model = lora_model
+    app.state.tokenizer = tokenizer
+    print("[STARTUP] Model and tokenizer loaded.")
 
 def text_to_pdf_bytes(text: str) -> BytesIO:
     buffer = BytesIO()
@@ -115,24 +118,6 @@ def preprocess_text(text: str) -> str:
             cleaned_lines.append(line)
     return '\n'.join(cleaned_lines)
 
-def query_ollama(prompt: str, model: str = "llama2"):
-    try:
-        result = subprocess.run(
-            ["ollama", "run", model, prompt],
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
-            timeout=300,
-            check=True
-        )
-        return result.stdout.strip()
-    except subprocess.CalledProcessError as e:
-        print("Ollama CLI error:", e.stderr)
-        return None
-    except Exception as e:
-        print("Unexpected error calling Ollama:", e)
-        return None
-
 def extract_text_with_pymupdf(pdf_path: str) -> str:
     doc = fitz.open(pdf_path)
     text = ""
@@ -197,7 +182,7 @@ def clean_summary(text):
     return ' '.join(sentences)
     
 @app.post("/upload")
-async def upload(file: UploadFile = File(...)):
+async def upload(request: Request, file: UploadFile = File(...)):
     try:
         print(f"Received file: {file.filename}, content type: {file.content_type}")
         contents = await file.read()
@@ -224,10 +209,13 @@ async def upload(file: UploadFile = File(...)):
             "• Separate each bullet point.\n"
             "• Use LaTeX-style notation for mathematical content.\n"
             "• DO NOT include introductions or conclusions.\n"
-            "OUTPUT: Only the cheatsheet content.\n\n" + cleaned_text[:30000]       # Test value, varies from model to model
+            "OUTPUT: Only the cheatsheet content.\n\n" + cleaned_text[:2048]       # Test value, varies from model to model
         )
 
-        cheatsheet = generate_text(lora_model, tokenizer, prompt)
+        model = request.app.state.model
+        tokenizer = request.app.state.tokenizer
+
+        cheatsheet = generate_text(model, tokenizer, prompt)
         
         if not cheatsheet:
             return JSONResponse(content={"error": "Failed to generate cheatsheet"}, status_code=500)

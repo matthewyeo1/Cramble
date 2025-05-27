@@ -1,4 +1,4 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer, TrainingArguments
+from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer, TrainingArguments, DataCollatorForLanguageModeling
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training, PeftModel
 from datasets import load_dataset
 from dotenv import load_dotenv
@@ -8,7 +8,7 @@ import os
 load_dotenv()
 
 def load_model_and_tokenizer():
-    model_name = "EleutherAI/gpt-neo-125M"
+    model_name = "EleutherAI/gpt-neo-125m"
     token = os.getenv("HF_ACCESS_TOKEN")
     model = AutoModelForCausalLM.from_pretrained(model_name, use_auth_token=token)
     tokenizer = AutoTokenizer.from_pretrained(model_name, use_auth_token=token)
@@ -32,20 +32,24 @@ def train_lora(model, tokenizer, output_dir="lora_output", epochs=3):
     tokenizer.pad_token = tokenizer.eos_token
 
     def preprocess_fn(example):
-        example["text"] = f"Input: {example['input']}\nOutput: {example['output']}"
+        input_text = str(example["input"])
+        output_text = str(example["output"])
+        example["text"] = f"Input: {input_text}\nOutput: {output_text}"
         return example
 
     dataset = dataset.map(preprocess_fn)
 
     def tokenize_fn(examples):
-        return tokenizer(
+        tokens = tokenizer(
             examples["text"],
             truncation=True,
             padding="max_length",
             max_length=512
         )
+        tokens["labels"] = tokens["input_ids"].copy()
+        return tokens
 
-    tokenized_dataset = dataset.map(tokenize_fn, batched=True)
+    tokenized_dataset = dataset.map(tokenize_fn, batched=True, remove_columns=dataset.column_names)
 
     training_args = TrainingArguments(
         output_dir=output_dir,
@@ -55,22 +59,28 @@ def train_lora(model, tokenizer, output_dir="lora_output", epochs=3):
         save_strategy="epoch",
         logging_steps=10,
         report_to="none",
+        save_total_limit=1,
+        remove_unused_columns=False,
     )
 
-    # NOTE: You'll need to define the Trainer with proper data collator and loss if using PEFT/LoRA
+    data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
 
-    # from peft import get_peft_model, LoraConfig
-    # peft_model = get_peft_model(model, LoraConfig(...))
-    # trainer = Trainer(model=peft_model, args=training_args, train_dataset=tokenized_dataset)
+    trainer = Trainer(
+        model=model,
+        args=training_args,
+        train_dataset=tokenized_dataset,
+        data_collator=data_collator,
+    )
 
-    # trainer.train()
+    trainer.train()
+    model.save_pretrained(output_dir)
 
 def load_lora_model(base_model_path, lora_model_path):
     model = AutoModelForCausalLM.from_pretrained(base_model_path)
     model = PeftModel.from_pretrained(model, lora_model_path)
     return model
 
-def generate_text(model, tokenizer, prompt, max_length=512):
+def generate_text(model, tokenizer, prompt, max_length=2048):
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
     outputs = model.generate(**inputs, max_length=max_length)
     return tokenizer.decode(outputs[0], skip_special_tokens=True)
