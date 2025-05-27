@@ -1,0 +1,30 @@
+{"input": "For Loops", "output": "• Used for iterating over a sequence\n• Syntax: for i in range(n):\n• Executes block n times"}
+{"input": "While Loops", "output": "• Loop runs while condition is true\n• Syntax: while condition:\n• Useful when number of iterations is unknown"}
+{"input": "Python Dictionaries", "output": "| Key | Value |\n|-----|-------|\n| 'a' | 1     |\n| 'b' | 2     |\n• Mutable key-value pairs\n• Access by key"}
+{"input": "Functions in Python", "output": "• Defined using `def` keyword\n• Can return values\n• Support default and keyword arguments"}
+{"input": "List Comprehensions", "output": "• Concise way to create lists\n• Syntax: [expression for item in iterable if condition]\n• More readable and faster than loops"}
+{"input": "Exception Handling", "output": "• Use `try-except` blocks\n• Can catch specific exceptions\n• `finally` block runs regardless of exceptions"}
+{"input": "Python Classes", "output": "• Blueprint for creating objects\n• Use `class` keyword\n• Support inheritance and encapsulation"}
+{"input": "Lambda Functions", "output": "• Anonymous functions\n• Syntax: `lambda arguments: expression`\n• Useful for short throwaway functions"}
+{"input": "File I/O", "output": "• Use `open()` to read/write files\n• Modes: 'r', 'w', 'a', 'rb', 'wb'\n• Use `with` to auto-close files"}
+{"input": "Decorators", "output": "• Functions that modify behavior of other functions\n• Syntax: `@decorator`\n• Used for logging, access control, etc."}
+{"input": "Generators", "output": "• Use `yield` to produce values lazily\n• More memory efficient than lists\n• Can be iterated with loops"}
+{"input": "Regular Expressions", "output": "• Used for pattern matching\n• Module: `re`\n• Common functions: `match`, `search`, `findall`"}
+{"input": "Python Sets", "output": "• Unordered collections of unique items\n• Support union, intersection, difference\n• Syntax: `{1, 2, 3}`"}
+{"input": "Recursion", "output": "• Function calls itself\n• Must have base case\n• Useful for tree and graph problems"}
+{"input": "Python Modules", "output": "• Files containing Python code\n• Import using `import module`\n• Can define functions, classes, variables"}
+{"input": "List vs Tuple", "output": "| Feature      | List           | Tuple         |\n|--------------|----------------|---------------|\n| Mutability   | Mutable        | Immutable     |\n| Syntax       | [1, 2, 3]      | (1, 2, 3)     |\n| Use Case     | Data that changes | Fixed data |"}
+{"input": "Python Dictionaries", "output": "• Key-value pairs\n• Keys must be immutable\n• Syntax: `{ 'key': 'value' }`"}
+{"input": "Map Function", "output": "• Applies a function to all items\n• Syntax: `map(func, iterable)`\n• Returns an iterator"}
+{"input": "Filter Function", "output": "• Filters items based on condition\n• Syntax: `filter(func, iterable)`\n• Returns an iterator"}
+{"input": "List Slicing", "output": "• Extract parts of a list\n• Syntax: `list[start:end:step]`\n• Supports negative indices"}
+{"input": "Python Boolean Logic", "output": "• Operators: `and`, `or`, `not`\n• Used in conditions\n• Short-circuit evaluation"}
+{"input": "String Formatting", "output": "• Methods: `%` operator, `.format()`, f-strings\n• f-strings preferred (Python 3.6+)\n• Syntax: `f\"Hello {name}\"`"}
+{"input": "Python Virtual Environments", "output": "• Isolates project dependencies\n• Created using `venv` module\n• Activate with `source venv/bin/activate` or `venv\\Scripts\\activate`"}
+{"input": "Python Iterators", "output": "• Objects that implement `__iter__()` and `__next__()`\n• Used in loops\n• Can be custom created"}
+{"input": "PEP 8", "output": "• Python style guide\n• Naming conventions, indentation, line length\n• Promotes readable code"}
+{"input": "Python Logging", "output": "• Use `logging` module\n• Levels: DEBUG, INFO, WARNING, ERROR, CRITICAL\n• Configurable handlers and formatters"}
+{"input": "Multithreading vs Multiprocessing", "output": "| Feature         | Multithreading    | Multiprocessing    |\n|-----------------|-------------------|--------------------|\n| Uses            | Threads           | Processes          |\n| GIL Impact      | Limited concurrency| True parallelism   |\n| Use Case        | I/O-bound tasks   | CPU-bound tasks    |"}
+{"input": "Python Context Managers", "output": "• Use `with` statement\n• Ensures resource cleanup\n• Example: `with open('file') as f:`"}
+{"input": "Python Dataclasses", "output": "• Simplify class boilerplate\n• Use `@dataclass` decorator\n• Auto-generates init, repr, eq methods"}
+{"input": "List Methods", "output": "• append(), extend(), insert(), remove(), pop()\n• sort(), reverse(), clear()\n• Modify lists in-place"}
