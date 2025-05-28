@@ -2,7 +2,6 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, Trainer, TrainingA
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training, PeftModel
 from datasets import load_dataset
 from dotenv import load_dotenv
-import torch
 import os
 
 load_dotenv()
@@ -27,6 +26,7 @@ def apply_lora(model, r=8, lora_alpha=16, lora_dropout=0.05):
     model = get_peft_model(model, config)
     return model
 
+# Training loop
 def train_lora(model, tokenizer, output_dir="lora_output", epochs=3):
     dataset = load_dataset("json", data_files="dataset.jsonl")["train"]
     tokenizer.pad_token = tokenizer.eos_token
@@ -34,14 +34,14 @@ def train_lora(model, tokenizer, output_dir="lora_output", epochs=3):
     def preprocess_fn(example):
         input_text = str(example["input"])
         output_text = str(example["output"])
-        example["text"] = f"Input: {input_text}\nOutput: {output_text}"
+        example["text"] = f"{input_text.strip()}\n\n###\n\n{output_text.strip()}"
         return example
 
     dataset = dataset.map(preprocess_fn)
 
     def tokenize_fn(examples):
         tokens = tokenizer(
-            examples["text"],
+            examples["text"] + tokenizer.eos_token,
             truncation=True,
             padding="max_length",
             max_length=512
@@ -82,12 +82,22 @@ def load_lora_model(base_model_path, lora_model_path):
 
 def generate_text(model, tokenizer, prompt, max_length=2048):
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
-    outputs = model.generate(**inputs, max_length=max_length)
+    input_length = inputs["input_ids"].shape[-1]
+
+    outputs = model.generate(
+        **inputs, 
+        max_length=max_length,
+        do_sample=False,
+        num_beams=4,
+        early_stopping=True,
+        pad_token_id=tokenizer.eos_token_id
+    )
+
     return tokenizer.decode(outputs[0], skip_special_tokens=True)
 
 if __name__ == "__main__":
     model, tokenizer = load_model_and_tokenizer()
     model = apply_lora(model)
-    train_lora(model, tokenizer, output_dir="lora_output", epochs=3)
+    train_lora(model, tokenizer, output_dir="lora_output", epochs=20)
 
     print("LoRA tuning complete!")

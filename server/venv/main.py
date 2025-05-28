@@ -219,7 +219,27 @@ async def upload(request: Request, file: UploadFile = File(...)):
         
         if not cheatsheet:
             return JSONResponse(content={"error": "Failed to generate cheatsheet"}, status_code=500)
+        
+        '''
+        if cheatsheet.startswith(prompt.strip()):
+            cheatsheet = cheatsheet[len(prompt.strip()):].strip()
+        '''
+        if prompt.strip() in cheatsheet:
+            cheatsheet = cheatsheet.split(prompt.strip(), 1)[-1].strip()
 
+        def remove_repeating_blocks(text, min_len=20):
+            lines = text.strip().split('\n')
+            seen = set()
+            output = []
+            for line in lines:
+                line_stripped = line.strip()
+                if len(line_stripped) >= min_len and line_stripped in seen:
+                    continue
+                seen.add(line_stripped)
+                output.append(line)
+            return '\n'.join(output).strip()
+
+        cheatsheet = remove_repeating_blocks(cheatsheet)
         cheatsheet = strip_article_phrases(cheatsheet)
         cheatsheet = remove_intro_and_conclusion(cheatsheet)
         cheatsheet = clean_summary(cheatsheet)

@@ -28,3 +28,23 @@
 {"input": "Python Context Managers", "output": "• Use `with` statement\n• Ensures resource cleanup\n• Example: `with open('file') as f:`"}
 {"input": "Python Dataclasses", "output": "• Simplify class boilerplate\n• Use `@dataclass` decorator\n• Auto-generates init, repr, eq methods"}
 {"input": "List Methods", "output": "• append(), extend(), insert(), remove(), pop()\n• sort(), reverse(), clear()\n• Modify lists in-place"}
+{"input": "Photosynthesis", "output": "• Process used by plants to make food\n• Converts sunlight, CO₂, and water into glucose\n• Occurs in chloroplasts"}
+{"input": "The Renaissance", "output": "• Cultural movement in Europe (14th–17th century)\n• Revival of art, science, and literature\n• Figures: Da Vinci, Michelangelo"}
+{"input": "Digestive System", "output": "• Breaks down food into nutrients\n• Main organs: stomach, intestines, liver\n• Absorbs nutrients and expels waste"}
+{"input": "Shakespeare's Plays", "output": "• Wrote tragedies, comedies, and histories\n• Famous works: Hamlet, Macbeth, Othello\n• Rich in language and dramatic themes"}
+{"input": "Earth’s Layers", "output": "• Crust, mantle, outer core, inner core\n• Each layer has different composition and temperature\n• Core is mostly iron and nickel"}
+{"input": "Human Skeletal System", "output": "• Provides body structure and protection\n• Adults have 206 bones\n• Works with muscles for movement"}
+{"input": "Photos of Ansel Adams", "output": "• Known for black-and-white landscape photography\n• Focused on American West, especially Yosemite\n• Advocated for conservation"}
+{"input": "The Water Cycle", "output": "• Includes evaporation, condensation, precipitation\n• Driven by the sun’s energy\n• Essential for Earth's ecosystems"}
+{"input": "The French Revolution", "output": "• Began in 1789\n• Overthrew monarchy and feudal system\n• Led to rise of Napoleon Bonaparte"}
+{"input": "Vitamin D", "output": "• Helps absorb calcium for bone health\n• Produced by skin in sunlight\n• Found in fatty fish and supplements"}
+{"input": "Musical Scales", "output": "• Sequences of notes in a specific order\n• Major scales sound happy, minor sound sad\n• Basis of melodies and harmonies"}
+{"input": "The Solar System", "output": "• Includes 8 planets orbiting the Sun\n• Inner planets: rocky; Outer planets: gas giants\n• Also contains moons, asteroids, comets"}
+{"input": "Haiku Poetry", "output": "• Japanese poetic form\n• 3 lines with 5-7-5 syllables\n• Often about nature or fleeting moments"}
+{"input": "The Immune System", "output": "• Defends against infections and diseases\n• Includes white blood cells and antibodies\n• Has innate and adaptive components"}
+{"input": "World War II", "output": "• Global war (1939–1945)\n• Axis vs Allies\n• Major events: Holocaust, D-Day, atomic bomb"}
+{"input": "Tectonic Plates", "output": "• Earth's surface is divided into plates\n• Move due to mantle convection\n• Cause earthquakes, volcanoes, mountains"}
+{"input": "The Olympics", "output": "• International sports event every 4 years\n• Includes summer and winter games\n• Promotes unity and athletic excellence"}
+{"input": "Types of Clouds", "output": "• Cirrus: wispy and high\n• Cumulus: puffy and white\n• Stratus: flat layers; Nimbostratus: rain clouds"}
+{"input": "Healthy Eating", "output": "• Balance of fruits, vegetables, proteins, and grains\n• Limit added sugars and saturated fats\n• Stay hydrated"}
+{"input": "The Great Wall of China", "output": "• Series of fortifications\n• Built to protect Chinese states from invasions\n• Spans over 13,000 miles"}
